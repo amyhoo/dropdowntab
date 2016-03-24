@@ -1,9 +1,9 @@
 English:
 introduce
 ============
-
+    more info refer ：http://www.cnblogs.com/yasmi/p/5292402.html
     This is a input addon,when you need to click an input and pop a dropdown menu which have several tab,and you have to perform selection
-     in different tab ,this will be useful；more info refer ：http://www.cnblogs.com/yasmi/p/5292402.html
+     in different tab ,this will be useful；
 
 how to use
 ---------
@@ -45,8 +45,9 @@ please download the endpoint.js to your software directory;
 中文:
 介绍
 ============
+    更多介绍请参考：http://www.cnblogs.com/yasmi/p/5292402.html
     这个是一个输入框的下拉菜单的选择控件；当你的输入下拉菜单需要一个包含多个tab的，且必须依照顺序从不同的tab中选择相应的选项，直到最后一个tab；这个控件可能就是你所需要的。
-     它支持多个tab页，数量由你定义；且当前的tab内容依赖于前面你的选择。更多介绍请参考：http://www.cnblogs.com/yasmi/p/5292402.html
+     它支持多个tab页，数量由你定义；且当前的tab内容依赖于前面你的选择。
 如何使用
 ============
     请下载endpoint.js 文件到你的文件夹下面
