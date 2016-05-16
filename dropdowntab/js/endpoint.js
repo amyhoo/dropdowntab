@@ -35,8 +35,8 @@
         var _index=endpoint_index;
         var path1=[];//记录已经选择的路径，应该是level1的code，level2的code，level3的code
         endpoint_index=endpoint_index+1;
-        var dropdown_tabs='<div class="dropdown-menu" aria-labelledby="'+$(this).attr('id')+'">'+
-            '<ul class="nav nav-tabs" role="tablist">';
+        var dropdown_tabs='<ul class="dropdown-menu" aria-labelledby="'+$(this).attr('id')+'">'+
+            '<ul class="nav nav-tabs " role="tablist">';
         for (var i = 0; i < levels.length; i++){
             item =levels[i];
             dropdown_tabs+='<li role="presentation"><a href="#'+item['code']+_index+'" aria-controls="home"'+' value="'+item['code']+'" role="tab" data-toggle="tab">'+item['name']+'</a></li>'
@@ -50,11 +50,10 @@
             dropdown_tabs+='<div role="tabpanel" class="tab-pane" id="'+item['code']+_index+'" >';
             dropdown_tabs+='</div>'
         }
-        dropdown_tabs+='</div>'+'</div>';
-
+        dropdown_tabs+='</div>'+'</ul>';
         function get_active_tab(){
             //获取当前active的tab的名字
-            active_tab=$(_this).next().find('ul>li[class="active"]>a')
+            active_tab=$(_this).next().find('ul>li[class="active"]>a');
             return active_tab.attr('value')
         }
 
@@ -76,7 +75,7 @@
             for (var i = 0; i < content.length; i++){
                 item=content[i];
                 if (!dict[item[tab_code]['code']]){
-                    list.push({'code':item[tab_code]['code'],'name':item[tab_code]['name']});
+                    list.push(item[tab_code]);
                     dict[item[tab_code]['code']]=true
                 }
 
@@ -89,7 +88,7 @@
             content_list=get_level_content(tab_code,content);
             for (var i = 0; i < content_list.length; i++){
                 item=content_list[i];
-                content_page+='<p style="padding-left:20px"><a value="'+item['code']+'">'+item['name']+'</a></p>'
+                content_page+='<p style="padding-left:20px"><a value="'+item['code']+'" item_id="'+item['id']+'">'+item['name']+'</a></p>'
             }
             content_page+='</div>';
             //找到相应的标签页，将其内容替换
@@ -111,7 +110,7 @@
             //在当前tab下选择了某个标签，获取下个tab，以及下个tab的内容，并将其组合
             current_tab=get_active_tab();//当前的tab页
             next_tab=get_next_tab(current_tab);
-            content_list=filter_array(choose_code);
+            content_list=filter_array(choosed_code);
             if (next_tab)
             {//有下个tab
                 tab_content(next_tab,content_list);//刷新下个页面的内容
@@ -123,9 +122,19 @@
             }
 
         }
-        $(this).after(dropdown_tabs); //下拉菜单载入
-        $(this).click(function(){
+        clear_control='<span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>';
+        $(this).after(clear_control); //下拉菜单载入
+        $(this).after(dropdown_tabs);
+        $(this).next().next().click(function(e){
+            $(_this).val('');
+            $(_this).attr('item_id','');
+            $(_this).attr('value','');
+            $(_this).trigger("onchange");
+            $(_this).next().hide();
+        });
+        $(this).click(function(e){
             //点击input时候,初始化第一个标签
+
             tab_code=levels[0]['code'];
             content_list=tab_data['content'];
             tab_content(tab_code,content_list);
@@ -138,8 +147,8 @@
             //注册某个tab的click响应事件
             tab_id=tab_code+_index;
             $(_this).next().find('#'+tab_id).find('a').click(function(e){
-                choose_code=$(this).attr('value');
-                next_tab=choose(choose_code);//
+                choosed_code=$(this).attr('value');
+                next_tab=choose(choosed_code);//
                 next_tab_id=next_tab+_index;
                 if (next_tab) {
                     reg_click(next_tab);//重新注册一下click事件，因为该tab该被生成}
@@ -148,10 +157,27 @@
 
                 else{
                     //最后一个标签页
-                    $(this).parents('.dropdown-menu').prev().val($(this).text());
+                    $(this).parents('.dropdown-menu').prev().val($(this).text());//$(this).text()
+                    //$(this).parents('.dropdown-menu').prev().text($(this).text());
+                    $(this).parents('.dropdown-menu').prev().attr('item_id',$(this).attr('item_id'));
+                    $(this).parents('.dropdown-menu').prev().attr('value',$(this).attr('item_id'));//attr('item_id',$(this).attr('item_id'))
                     $(this).parents('.dropdown-menu').toggle();
+                    $(_this).trigger("onchange");
+                    $(_this).trigger("oninput");
+                    $(_this).trigger("onpropertychange");
                 }
             })
         }
+        $(_this).parent().click(function(e){
+            e.stopPropagation();
+        });
+        $(_this).next().find('ul>li>a').each(function(e){
+            $(this).click(function(){
+                $(this).tab('show');
+            })}
+        );
+        $(document).click(function(e){
+            $(_this).next().hide();
+        });
     }
 })(jQuery);
